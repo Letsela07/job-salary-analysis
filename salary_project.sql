@@ -38,7 +38,7 @@ SELECT COUNT(*) FROM job_salaries;
 -- Stage 2: Data Cleaning
 -- =============================================
 
--- Check for NULL values in all columns
+-- Question 1: Check for NULL values in all columns
 SELECT 
     SUM(job_title IS NULL) AS null_job_title,
     SUM(experience_years IS NULL) AS null_experience,
@@ -51,13 +51,9 @@ SELECT
     SUM(certifications IS NULL) AS null_certifications,
     SUM(salary IS NULL) AS null_salary
 FROM job_salaries;
-
 -- Result: No NULLs found in any column ✓
 
-
--- Check for duplicate rows
-
-
+-- Question 2: Check for duplicate rows
 SELECT 
     job_title, experience_years, education_level,
     skills_count, industry, company_size,
@@ -69,11 +65,9 @@ GROUP BY
     skills_count, industry, company_size,
     location, remote_work, certifications, salary
 HAVING COUNT(*) > 1;
-
 -- Result: No duplicates found ✓
 
-
--- : Check consistency of categorical columns
+-- Question 3: Check consistency of categorical columns
 SELECT DISTINCT remote_work FROM job_salaries;
 -- Result: Yes, No, Hybrid ✓
 
@@ -85,7 +79,7 @@ SELECT DISTINCT industry FROM job_salaries;
 
 SELECT DISTINCT company_size FROM job_salaries;
 -- Result: Small, Medium, Large, Enterprise, Startup
---  Note: Enterprise and Startup sit alongside Small/Medium/Large
+-- ⚠️ Note: Enterprise and Startup sit alongside Small/Medium/Large
 
 SELECT DISTINCT location FROM job_salaries;
 -- Result: 10 values - India, Australia, Singapore, Canada, 
@@ -123,42 +117,6 @@ FROM job_salaries;
 -- =============================================
 
 -- Question 1: Which job title pays the most?
-
-SELECT 
-    job_title, 
-    ROUND(AVG(salary), 2) AS avg_salary
-FROM job_salaries
-GROUP BY job_title
-ORDER BY avg_salary DESC;
-
--- Result: AI Engineer pays the most, Data Analyst pays the least
-
--- Question 2: How many people have PhD and earn more than 100k?
-
-SELECT COUNT(*) AS phd_above_100k
-FROM job_salaries
-WHERE education_level = 'PhD' AND salary >= 100000;
-
--- Extended: Compare all education levels above 100k
-
-SELECT 
-    education_level,
-    COUNT(*) AS count_above_100k
-FROM job_salaries
-WHERE salary >= 100000
-GROUP BY education_level
-ORDER BY count_above_100k DESC;
-
--- Conclusion: PhD earns most above 100k (47,894) vs High School (41,294)
--- Gap is only 6,600 — education alone may not be the biggest salary driver
--- This leads us to Question 3 — what factor matters most?
-
-
--- =============================================
--- Stage 3: Exploratory Data Analysis (EDA)
--- =============================================
-
--- Question 1: Which job title pays the most?
 SELECT 
     job_title, 
     ROUND(AVG(salary), 2) AS avg_salary
@@ -174,7 +132,6 @@ WHERE education_level = 'PhD' AND salary >= 100000;
 -- Result: 47,894 people ✓
 
 -- Extended Q2: Compare all education levels above 100k
-
 SELECT 
     education_level,
     COUNT(*) AS count_above_100k
@@ -182,14 +139,12 @@ FROM job_salaries
 WHERE salary >= 100000
 GROUP BY education_level
 ORDER BY count_above_100k DESC;
-
 -- Result: PhD(47894) Master(47069) Bachelor(44466) Diploma(42941) High School(41294)
 -- Conclusion: Small gap of only 6,600 between PhD and High School ✓
 
+-- Question 3: What drives salary more - education, skills or industry?
 
-Question 3: What drives salary more - education, skills or industry?
 -- 3a: Industry vs salary
-
 SELECT 
     industry,
     ROUND(AVG(salary), 2) AS avg_salary
@@ -200,7 +155,6 @@ ORDER BY avg_salary DESC;
 -- Conclusion: Only 594 difference - industry has minimal impact ✓
 
 -- 3b: Skills vs salary
-
 SELECT 
     skills_count,
     ROUND(AVG(salary), 2) AS avg_salary
@@ -211,7 +165,6 @@ ORDER BY skills_count ASC;
 -- Conclusion: Skills have moderate impact ✓
 
 -- 3c: Education level vs salary
-
 SELECT 
     education_level,
     ROUND(AVG(salary), 2) AS avg_salary
@@ -234,7 +187,6 @@ SELECT
 FROM job_salaries
 GROUP BY location
 ORDER BY avg_salary DESC;
-
 -- Result: USA(181716) Canada(167391) UK(160075) Germany(153376)
 --         Remote(139442) Sweden(139440) Australia(139362)
 --         Singapore(139340) Netherlands(139294) India(97690)
@@ -242,9 +194,7 @@ ORDER BY avg_salary DESC;
 -- Conclusion: LOCATION IS THE BIGGEST SALARY DRIVER ✓
 -- Overturns Q3 conclusion - location beats education!
 
-
 -- Question 5: How does company size affect salary?
-
 SELECT 
     company_size,
     ROUND(AVG(salary), 2) AS average_salary
