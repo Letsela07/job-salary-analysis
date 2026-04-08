@@ -26,3 +26,7 @@ analyzing 250,000 job salary records from Kaggle.
 - Source: Kaggle
 - 250,000 rows
 - 10 columns
+
+## Dashboard
+View the interactive dashboard here:
+[Job Salary Analysis Dashboard](https://lookerstudio.google.com/reporting/e85e0369-27c2-47fc-b1ab-4cbea43114f3)
